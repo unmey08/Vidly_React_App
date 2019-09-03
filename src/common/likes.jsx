@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Likes = props => {
+const Likes = ({ lState, onClick }) => {
     return (
-        <i className={props.lState ? "fa fa-heart" : "fa fa-heart-o"} aria-hidden="true" onClick={props.onClick} style={{ cursor: 'pointer' }}></i>
+        <i className={lState ? "fa fa-heart clickable" : "fa fa-heart-o clickable"} aria-hidden="true" onClick={onClick}></i>
     );
 }
 
