@@ -3,6 +3,40 @@ body {
   padding: 0;
 }
 
+.main {
+  background-color: #eee;
+  height: 100vh;
+}
+
 .clickable {
   cursor: pointer;
+}
+
+.bg-color {
+  background-color: #27556C;
+}
+
+.nav-bg-color {
+  background-color: #27556C;
+}
+
+.pagination li button {
+  background-color: #27556C;
+  color: #fff;
+}
+
+.pagination .active{
+  background-color: #fff;
+}
+
+input[type="text"] {
+  background-color: rgba(255,255,255,0.5);
+}
+
+.fa-heart-o, .fa-heart {
+  color: #ff0000;
+}
+
+.fa-trash {
+  color: #888;
 }

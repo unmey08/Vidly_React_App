@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { getMovies } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
 import MoviesTable from './moviesTable';
 import Pagination from '../common/pagination';
 import { paginate } from "../utils/paginate.js";
 import Filters from '../common/filters';
+import SearchBox from '../common/searchBox';
 import _ from 'lodash';
 import '../App.css';
 
@@ -14,8 +16,9 @@ class Movies extends Component {
         pageSize: 4,
         currentPage: 1,
         genres: [],
-        sortColumn: { path: 'title', order: 'asc' }
-
+        sortColumn: { path: 'title', order: 'asc' },
+        query: '',
+        currentGenre: null
     }
 
     componentDidMount() {
@@ -41,16 +44,25 @@ class Movies extends Component {
     }
 
     handleGenreChange = genre => {
-        this.setState({ currentGenre: genre, currentPage: 1 });
+        this.setState({ currentGenre: genre, currentPage: 1, query: "" });
     }
 
     handleSort = sortColumn => {
         this.setState({ sortColumn });
     }
 
+    handleSearch = (query) => {
+        this.setState({ query: query, currentPage: 1, currentGenre: null });
+    }
+
     getPagedData = () => {
-        const { pageSize, currentPage, movies: allMovies, currentGenre, sortColumn } = this.state;
-        const filtered = currentGenre && currentGenre._id ? allMovies.filter(m => m.genre._id === currentGenre._id) : allMovies;
+        const { pageSize, currentPage, movies: allMovies, currentGenre, sortColumn, query } = this.state;
+        let filtered = allMovies;
+        if (query) {
+            filtered = allMovies.filter(movie => movie.title.toLowerCase().startsWith(query.toLowerCase()));
+        } else if (currentGenre && currentGenre._id){
+            filtered = allMovies.filter(m => m.genre._id === currentGenre._id)
+        }
         const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
         const movies = paginate(sorted, currentPage, pageSize);
         return { totalCount: filtered.length, data: movies }
@@ -58,7 +70,7 @@ class Movies extends Component {
 
     render() {
         const { length: count } = this.state.movies;
-        const { pageSize, currentPage, sortColumn, genres, currentGenre } = this.state;
+        const { pageSize, currentPage, sortColumn, genres, currentGenre, query } = this.state;
 
         if (count === 0)
             return <p className="mt-5 mb-5 top-line">There are no movies in the database.</p>
@@ -71,7 +83,9 @@ class Movies extends Component {
                         <Filters genres={genres} onGenreChange={this.handleGenreChange} currentGenre={currentGenre} />
                     </div>
                     <div className="col">
+                        <Link to="/movies/new"><button className="btn p-2 mb-3 nav-bg-color text-light">Add Movie</button></Link>
                         <p>Showing {totalCount} movies in the database</p>
+                        <SearchBox value={query} onChange={this.handleSearch} />
                         <MoviesTable movies={data} onLike={this.handleLike} onDelete={this.handleDelete} handleSort={this.handleSort} sortColumn={sortColumn} onSort={this.handleSort} />
                         <Pagination itemsCount={totalCount} pageSize={pageSize} onPageChange={this.handlePageChange} currentPage={currentPage} />
                     </div>

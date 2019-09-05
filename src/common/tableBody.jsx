@@ -28,19 +28,3 @@ class TableBody extends Component {
 
 export default TableBody;
 
-// < tbody >
-//     {
-//         movies.map((movie, current) => {
-//             return (
-//                 <tr key={movie._id}>
-//                     <td><Link to={`/movies/${movie._id}`}>{movie.title}</Link></td>
-//                     <td>{movie.genre.name}</td>
-//                     <td>{movie.numberInStock}</td>
-//                     <td>{movie.dailyRentalRate}</td>
-//                     <td></td>
-//                     <td></td>
-//                 </tr>
-//             )
-//         })
-//     }
-// </tbody>
